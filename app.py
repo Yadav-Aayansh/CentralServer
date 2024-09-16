@@ -44,7 +44,7 @@ def login():
             print(f"Service redirect URL: {service_redirect}")
 
             # Parse the URL
-            parsed_url = urlparse(url)
+            parsed_url = urlparse(service_redirect)
             
             # Extract the domain
             domain = parsed_url.netloc 
