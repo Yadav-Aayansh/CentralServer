@@ -31,7 +31,7 @@ def login():
         password = request.form.get('password')
         
         # Check user and password
-        if username in users and check_password_hash(users[username]['password'], password):
+        if username in users and users[username]['password'] == password:
             # Generate JWT token if authenticated
             token = jwt.encode({
                 'username': username,
