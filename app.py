@@ -4,6 +4,7 @@ import datetime
 from flask_cors import CORS
 from werkzeug.security import check_password_hash
 import os
+from urllib.parse import urlparse
 
 app = Flask(__name__)
 CORS(app)  # Allow cross-origin requests from service domains
@@ -42,10 +43,12 @@ def login():
             print(f"Generated token: {token}")
             print(f"Service redirect URL: {service_redirect}")
 
-            response = make_response(redirect(f'{service_redirect}?token={token}'))
-            response.set_cookie('auth_token', token, httponly=True, secure=True, domain='.onrender.com')
-
-            return response
+            # Parse the URL
+            parsed_url = urlparse(url)
+            
+            # Extract the domain
+            domain = parsed_url.netloc 
+            return redirect(f'{domain}/login_redirect?token={token}&service={service_redirect}'
         return "Invalid credentials", 401
 
     return '''
