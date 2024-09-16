@@ -48,7 +48,7 @@ def login():
             
             # Extract the domain
             domain = parsed_url.netloc 
-            return redirect(f'{domain}/login_redirect?token={token}&service={service_redirect}')
+            return redirect(url_for(f'{domain}/login_redirect?token={token}&service={service_redirect}'))
         return "Invalid credentials", 401
 
     return '''
