@@ -36,11 +36,9 @@ def login():
             }, SECRET_KEY, algorithm='HS256')
 
             service_redirect = request.args.get('service')
-            if not service_redirect:
-                return "No service redirect URL provided", 400
-
             # Log to verify the token and service_redirect
             print(f"Generated token: {token}")
+            
             print(f"Service redirect URL: {service_redirect}")
 
             # Parse the URL
