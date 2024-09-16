@@ -22,27 +22,27 @@ users = {
 
 # Routes
 
-# Main login route (used by service to redirect users here for login)
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        # Get user credentials from request form
         username = request.form.get('username')
         password = request.form.get('password')
         
-        # Check user and password
         if username in users and users[username]['password'] == password:
-            # Generate JWT token if authenticated
             token = jwt.encode({
                 'username': username,
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=TOKEN_EXPIRATION_TIME)
             }, SECRET_KEY, algorithm='HS256')
 
-            # Redirect user back to service with the token
-            service_redirect = request.args.get('service')  # e.g., noctiservice1.vercel.app
-            response = make_response(redirect(f'{service_redirect}?token={token}'))
+            service_redirect = request.args.get('service')
+            if not service_redirect:
+                return "No service redirect URL provided", 400
 
-            # Set auth_token cookie on centralserver domain (can also use other session mechanisms)
+            # Log to verify the token and service_redirect
+            print(f"Generated token: {token}")
+            print(f"Service redirect URL: {service_redirect}")
+
+            response = make_response(redirect(f'{service_redirect}?token={token}'))
             response.set_cookie('auth_token', token, httponly=True, secure=True, domain='.onrender.com')
 
             return response
@@ -55,6 +55,7 @@ def login():
             <input type="submit" value="Login">
         </form>
     '''
+
 
 
 # Verify token route (services will hit this to verify if token is valid)
